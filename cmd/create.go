@@ -23,7 +23,14 @@ var createCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 		tui.RunPrompt()
-		createSvelteKit(tui.GetProjectName())
+
+		fmt.Print(tui.GetIncludeSaibaUI())
+		fmt.Print(tui.GetFeatures())
+
+		if err := createSvelteKit(tui.GetProjectName()); err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 
 		for _, feature := range tui.GetFeatures() {
 			switch feature {
@@ -43,7 +50,7 @@ var createCmd = &cobra.Command{
 	},
 }
 
-func createSvelteKit(projectName string) {
+func createSvelteKit(projectName string) error {
 	cmd := exec.Command("npm", "create", "svelte@latest", projectName)
 
 	cmd.Stdin = os.Stdin
@@ -51,12 +58,13 @@ func createSvelteKit(projectName string) {
 	cmd.Stderr = os.Stderr
 
 	if err := cmd.Run(); err != nil {
-		fmt.Printf("Command finished with error: %v\n", err)
-	} else {
-		fmt.Printf("Svelte Project created!.\n")
+		return fmt.Errorf("command finished with error: %v", err)
 	}
-}
 
+	fmt.Println("Svelte Project created successfully.")
+
+	return nil
+}
 func addSASS() {
 	gotoDir(tui.GetProjectName())
 
@@ -99,7 +107,12 @@ func addIconifyIcons() {
 func addSaibaUI() {
 	gotoDir(tui.GetProjectName())
 
-	cloneAndCopySubdir("https://github.com/mastergrimm/saiba-cli.git", "templates/saibaUI", "src/lib")
+	err := cloneAndCopySubdir("https://github.com/mastergrimm/saiba-cli.git", "templates/saibaUI", "src/lib")
+	if err != nil {
+		fmt.Printf("Failed to add SaibaUI: %v\n", err)
+	} else {
+		fmt.Println("SaibaUI added successfully.")
+	}
 }
 
 func gotoDir(dir string) {

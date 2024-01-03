@@ -43,7 +43,10 @@ func NewModel() model {
 
 		huh.NewGroup(
 			huh.NewConfirm().
+				Key("includeSaibaUI").
 				Title("Would you like to add SaibaUI?").
+				Affirmative("Yes").
+				Negative("No").
 				Value(&m.includeSaibaUI),
 		),
 	)
