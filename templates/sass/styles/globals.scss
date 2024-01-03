@@ -1,0 +1,39 @@
+@use "mixins" as *;
+
+html,
+body {
+	font-family: "Inter", sans-serif;
+	font-size: 16px;
+	font-weight: 500;
+	color: var(--clr-text);
+	background-color: var(--clr-bg);
+
+	@include tablet {
+		font-size: 14px;
+	}
+}
+
+:root {
+	--text-xs: 0.75rem;
+	--text-sm: 0.875rem;
+	--text-base: 1rem;
+	--text-md: 1.2rem;
+	--text-lg: 1.563rem;
+	--text-xl: 1.953rem;
+	--text-2xl: 2.441rem;
+	--text-3xl: 3.052rem;
+	--text-4xl: 3.815rem;
+	--text-5xl: 4.768rem;
+
+	--spacing-quarter: 0.5rem;
+	--spacing-half: 0.75rem;
+	--spacing-1: 1rem;
+	--spacing-2: 2rem;
+	--spacing-4: 4rem;
+	--spacing-6: 6rem;
+
+	--rounded-sm: 0.125rem;
+	--rounded-md: 0.25rem;
+	--rounded-lg: 0.5rem;
+	--rounded-full: 9999px;
+}
