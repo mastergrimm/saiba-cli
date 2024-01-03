@@ -21,18 +21,29 @@ var createCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 		tui.RunPrompt()
-		executeNPMScript(tui.GetProjectName())
+		createSvelteKit(tui.GetProjectName())
+
+		for _, feature := range tui.GetFeatures() {
+			switch feature {
+			case "SASS":
+				addSASS()
+			case "Lucia Auth":
+				fmt.Println("Lucia Auth")
+			case "Iconify Icons":
+				fmt.Println("Iconify Icons")
+			}
+		}
+
 	},
 }
 
-func executeNPMScript(projectName string) {
+func createSvelteKit(projectName string) {
 	cmd := exec.Command("npm", "create", "svelte@latest", projectName)
 
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
-	// Run the command
 	if err := cmd.Run(); err != nil {
 		fmt.Printf("Command finished with error: %v\n", err)
 	} else {
@@ -41,7 +52,17 @@ func executeNPMScript(projectName string) {
 }
 
 func addSASS() {
+	if err := os.Chdir(tui.GetProjectName()); err != nil {
+		fmt.Printf("Could not change directory: %v\n", err)
+	} else {
+		fmt.Printf("Changed directory to %s\n", tui.GetProjectName())
+	}
+
 	cmd := exec.Command("npx", "svelte-add@latest", "sass")
+
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 
 	if err := cmd.Run(); err != nil {
 		fmt.Printf("Could not add SASS: %v\n", err)

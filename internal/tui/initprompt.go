@@ -104,3 +104,15 @@ func RunPrompt() {
 func GetProjectName() string {
 	return FormValues.form.GetString("projectName")
 }
+
+func GetRepoName() string {
+	return FormValues.form.GetString("repoName")
+}
+
+func GetFeatures() []string {
+	return FormValues.form.Get("features").([]string)
+}
+
+func GetIncludeSaibaUI() bool {
+	return FormValues.form.GetBool("includeSaibaUI")
+}
