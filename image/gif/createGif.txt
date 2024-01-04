@@ -1,0 +1,1 @@
+agg saiba.cast demo.gif --font-size 42 --theme github-dark --speed 3 --font-family "Fira Code" --idle-time-limit 1 --cols 55 --rows 15

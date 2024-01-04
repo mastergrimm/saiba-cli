@@ -24,9 +24,6 @@ var createCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		tui.RunPrompt()
 
-		fmt.Print(tui.GetIncludeSaibaUI())
-		fmt.Print(tui.GetFeatures())
-
 		if err := createSvelteKit(tui.GetProjectName()); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -46,7 +43,6 @@ var createCmd = &cobra.Command{
 		if tui.GetIncludeSaibaUI() {
 			addSaibaUI()
 		}
-
 	},
 }
 
@@ -116,7 +112,6 @@ func addSaibaUI() {
 }
 
 func gotoDir(dir string) {
-
 	if err := os.Chdir(dir); err != nil {
 		fmt.Printf("Could not change directory: %v\n", err)
 	} else {
