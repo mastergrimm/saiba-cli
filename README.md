@@ -18,7 +18,11 @@ Saiba CLI is a command-line interface tool designed to streamline the creation a
 
 ## Features
 
--   **Create SvelteKit Projects**: Quickly scaffold a new SvelteKit project with the latest features and best practices.
+- **Create SvelteKit Projects**: Quickly scaffold a new SvelteKit project with the latest features and best practices.
+- **SASS Integration**: Easily add SASS to your projects for more powerful and flexible styling.
+- **Lucia Authentication**: Implement Lucia for robust authentication solutions right out of the box.
+- **Iconify Icons**: Access a rich library of icons with Iconify integration, enhancing the visual appeal and user interface of your projects.
+- **SaibaUI Components**: Utilize SaibaUI to speed up your UI development with pre-built, customizable components tailored for SvelteKit.
 
 ## Getting Started
 
@@ -71,7 +75,7 @@ To create a new SvelteKit project, simply run:
 saiba create
 ```
 
-This will create a new SvelteKit project using the template from the official SvelteKit repository.
+Then follow the following prompts. "Space" to select options. "Enter" to go the the next field.
 
 
 
