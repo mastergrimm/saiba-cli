@@ -1,6 +1,16 @@
-# Saiba CLI
+<div align="center">
+  <img src="image/banner.png" alt="drawing" width="620"/>
+</div>
 
-<img src="image/banner.png" alt="drawing" width="420"/>
+<div align="center"><b>Generate and Assist with building web applications</b></div>
+
+<br />
+
+<h1>Saiba CLI</h1>
+
+> [!WARNING]
+> This project is in the early stages of development and is not ready for production use. Many features are currently missing or may not work as expected. Please use with caution and at your own risk.
+
 
 Saiba CLI is a command-line interface tool designed to streamline the creation and management of Saiba Web Projects, particularly focused on SvelteKit applications.
 
