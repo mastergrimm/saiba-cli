@@ -1,7 +1,7 @@
 *,
 *::before,
 *::after {
-	box-sizing: border-box;
+	box-sizing: inherit;
 }
 
 * {
@@ -12,6 +12,7 @@
 
 html {
 	color-scheme: dark light;
+	box-sizing: border-box;
 }
 
 body {

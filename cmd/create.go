@@ -2,13 +2,14 @@ package cmd
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"os/exec"
-	"path/filepath"
+
+	"github.com/mastergrimm/saiba-cli/internal/utils"
 
 	"github.com/spf13/cobra"
 
+	"github.com/charmbracelet/huh/spinner"
 	"github.com/mastergrimm/saiba-cli/internal/tui"
 )
 
@@ -22,26 +23,30 @@ var createCmd = &cobra.Command{
 	- SaibaUI`,
 
 	Run: func(cmd *cobra.Command, args []string) {
-		tui.RunPrompt()
+		if err := tui.RunPrompt(); err != nil {
+			fmt.Printf("Could not initialize prompt: %v\n", err)
+			return
+		}
 
 		if err := createSvelteKit(tui.GetProjectName()); err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			fmt.Printf("Could not create SvelteKit project: %v\n", err)
+			return
 		}
 
 		for _, feature := range tui.GetFeatures() {
 			switch feature {
 			case "SASS":
-				addSASS()
+				_ = spinner.New().Title("Adding Sass folders").Action(addSASS).Run()
 			case "Lucia Auth":
-				addLuciaAuth()
+				_ = spinner.New().Title("Adding Lucia Auth").Action(addLuciaAuth).Run()
+
 			case "Iconify Icons":
-				addIconifyIcons()
+				_ = spinner.New().Title("Adding Iconify Icons").Action(addIconifyIcons).Run()
 			}
 		}
 
 		if tui.GetIncludeSaibaUI() {
-			addSaibaUI()
+			_ = spinner.New().Title("Adding SaibaUI").Action(addSaibaUI).Run()
 		}
 	},
 }
@@ -57,14 +62,18 @@ func createSvelteKit(projectName string) error {
 		return fmt.Errorf("command finished with error: %v", err)
 	}
 
+	fmt.Print("\n")
+
 	fmt.Println("Svelte Project created successfully.")
+
+	fmt.Print("\n")
 
 	return nil
 }
 func addSASS() {
-	gotoDir(tui.GetProjectName())
+	utils.GotoDir(tui.GetProjectName())
 
-	cmd := exec.Command("npx", "svelte-add@latest", "sass")
+	cmd := exec.Command("npx", "-q", "svelte-add@latest", "sass")
 
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
@@ -73,22 +82,31 @@ func addSASS() {
 	if err := cmd.Run(); err != nil {
 		fmt.Printf("Could not add SASS: %v\n", err)
 	} else {
-		fmt.Printf("SASS installed correctly!\n")
+		fmt.Printf("SASS installed!\n")
 	}
 
-	cloneAndCopySubdir("https://github.com/mastergrimm/saiba-cli.git", "templates/sass", "src/lib")
+	err := utils.CloneAndCopySubdir("https://github.com/mastergrimm/saiba-cli.git", "templates/sass", "src/lib")
+
+	if err != nil {
+		fmt.Printf("Failed to add SASS: %v\n", err)
+	}
 }
 
 func addLuciaAuth() {
-	gotoDir(tui.GetProjectName())
+	utils.GotoDir(tui.GetProjectName())
 
-	cloneAndCopySubdir("https://github.com/mastergrimm/saiba-cli.git", "templates/lucia", "src/lib")
+	err := utils.CloneAndCopySubdir("https://github.com/mastergrimm/saiba-cli.git", "templates/lucia", "src/lib")
+
+	if err != nil {
+		fmt.Printf("Failed to add Lucia Auth: %v\n", err)
+	}
+
 }
 
 func addIconifyIcons() {
-	gotoDir(tui.GetProjectName())
+	utils.GotoDir(tui.GetProjectName())
 
-	cmd := exec.Command("npm", "install", "--save-dev", "@iconify/svelte")
+	cmd := exec.Command("npm", "install", "--silent", "--no-progress", "--save-dev", "@iconify/svelte")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
@@ -101,100 +119,12 @@ func addIconifyIcons() {
 }
 
 func addSaibaUI() {
-	gotoDir(tui.GetProjectName())
+	utils.GotoDir(tui.GetProjectName())
 
-	err := cloneAndCopySubdir("https://github.com/mastergrimm/saiba-cli.git", "templates/saibaUI", "src/lib")
+	err := utils.CloneAndCopySubdir("https://github.com/mastergrimm/saiba-cli.git", "templates/saibaUI", "src/lib")
 	if err != nil {
 		fmt.Printf("Failed to add SaibaUI: %v\n", err)
-	} else {
-		fmt.Println("SaibaUI added successfully.")
 	}
-}
-
-func gotoDir(dir string) {
-	if err := os.Chdir(dir); err != nil {
-		fmt.Printf("Could not change directory: %v\n", err)
-	} else {
-		fmt.Printf("Changed directory to %s\n", tui.GetProjectName())
-	}
-}
-
-func cloneAndCopySubdir(repo, subdir, destination string) error {
-	tempDir, err := os.MkdirTemp("", "repo-")
-	if err != nil {
-		return fmt.Errorf("failed to create temp directory: %w", err)
-	}
-	defer os.RemoveAll(tempDir)
-
-	cloneCmd := exec.Command("git", "clone", repo, tempDir)
-	if err := runCommand(cloneCmd); err != nil {
-		return fmt.Errorf("failed to clone repository: %w", err)
-	}
-
-	srcPath := filepath.Join(tempDir, subdir)
-	if err := copyDir(srcPath, destination); err != nil {
-		return fmt.Errorf("failed to copy subdirectory: %w", err)
-	}
-
-	return nil
-}
-
-func runCommand(cmd *exec.Cmd) error {
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	return cmd.Run()
-}
-
-func copyDir(src, dst string) error {
-	var err error
-	var fds []os.DirEntry
-	var srcinfo os.FileInfo
-
-	if srcinfo, err = os.Stat(src); err != nil {
-		return err
-	}
-
-	if err = os.MkdirAll(dst, srcinfo.Mode()); err != nil {
-		return err
-	}
-
-	if fds, err = os.ReadDir(src); err != nil {
-		return err
-	}
-	for _, fd := range fds {
-		srcfp := filepath.Join(src, fd.Name())
-		dstfp := filepath.Join(dst, fd.Name())
-
-		if fd.IsDir() {
-			if err = copyDir(srcfp, dstfp); err != nil {
-				fmt.Println(err)
-			}
-		} else {
-			if err = copyFile(srcfp, dstfp); err != nil {
-				fmt.Println(err)
-			}
-		}
-	}
-	return nil
-}
-
-func copyFile(src, dst string) error {
-	in, err := os.Open(src)
-	if err != nil {
-		return err
-	}
-	defer in.Close()
-
-	out, err := os.Create(dst)
-	if err != nil {
-		return err
-	}
-	defer out.Close()
-
-	if _, err = io.Copy(out, in); err != nil {
-		return err
-	}
-	return out.Close()
 }
 
 func init() {

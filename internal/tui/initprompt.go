@@ -8,7 +8,6 @@ import (
 	"github.com/charmbracelet/huh"
 )
 
-// Define your struct to hold form data
 type model struct {
 	form           *huh.Form
 	projectName    string
@@ -16,6 +15,8 @@ type model struct {
 	features       []string
 	includeSaibaUI bool
 }
+
+var theme *huh.Theme = huh.ThemeBase16()
 
 func NewModel() model {
 	m := model{}
@@ -32,7 +33,7 @@ func NewModel() model {
 				Value(&m.repoName),
 			huh.NewMultiSelect[string]().
 				Key("features").
-				Title("Select all features you'd like").
+				Title("Select all features you'd like (Space Bar)").
 				Options(
 					huh.NewOption("SASS", "SASS"),
 					huh.NewOption("Lucia Auth", "Lucia Auth"),
@@ -48,7 +49,7 @@ func NewModel() model {
 				Affirmative("Yes").
 				Negative("No").
 				Value(&m.includeSaibaUI),
-		),
+		).WithTheme(theme),
 	)
 
 	return m
@@ -88,7 +89,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m model) View() string {
 	if m.form.State == huh.StateCompleted {
-		formOutput := "Form completed. Project is being created...\n"
+		formOutput := "Form complete. Please wait for the SvelteKit prompt...\n"
 
 		return formOutput
 	}
@@ -97,11 +98,13 @@ func (m model) View() string {
 
 var FormValues = NewModel()
 
-func RunPrompt() {
+func RunPrompt() error {
 	if _, err := tea.NewProgram(FormValues).Run(); err != nil {
 		fmt.Println("Error running program:", err)
 		os.Exit(1)
 	}
+
+	return nil
 }
 
 func GetProjectName() string {
