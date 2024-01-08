@@ -1,6 +1,7 @@
 package tui
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -14,6 +15,7 @@ type model struct {
 	repoName       string
 	features       []string
 	includeSaibaUI bool
+	store          bool
 }
 
 var theme *huh.Theme = huh.ThemeBase16()
@@ -26,11 +28,24 @@ func NewModel() model {
 			huh.NewInput().
 				Key("projectName").
 				Title("Enter Project Name").
-				Value(&m.projectName),
+				Value(&m.projectName).
+				Validate(func(str string) error {
+					if str == "" {
+						return errors.New("project name cannot be empty")
+					}
+
+					return nil
+				}),
 			huh.NewInput().
 				Key("repoName").
 				Title("Enter Repo Name").
-				Value(&m.repoName),
+				Value(&m.repoName).
+				Validate(func(str string) error {
+					// TODO: Add regex for github repo name
+
+					return nil
+				}),
+
 			huh.NewMultiSelect[string]().
 				Key("features").
 				Title("Select all features you'd like (Space Bar)").
@@ -49,6 +64,14 @@ func NewModel() model {
 				Affirmative("Yes").
 				Negative("No").
 				Value(&m.includeSaibaUI),
+		),
+		huh.NewGroup(
+			huh.NewConfirm().
+				Key("store").
+				Title("Add Svelte Store (including folders)?").
+				Affirmative("Yes").
+				Negative("No").
+				Value(&m.store),
 		).WithTheme(theme),
 	)
 
@@ -121,4 +144,8 @@ func GetFeatures() []string {
 
 func GetIncludeSaibaUI() bool {
 	return FormValues.form.GetBool("includeSaibaUI")
+}
+
+func GetStore() bool {
+	return FormValues.form.GetBool("store")
 }

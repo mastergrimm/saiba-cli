@@ -47,6 +47,10 @@ var createCmd = &cobra.Command{
 		if tui.GetIncludeSaibaUI() {
 			_ = spinner.New().Title("Adding SaibaUI").Action(addSaibaUI).Run()
 		}
+
+		if tui.GetStore() {
+			_ = spinner.New().Title("Adding Store").Action(addStore).Run()
+		}
 	},
 }
 
@@ -65,6 +69,23 @@ func createSvelteKit(projectName string) error {
 	fmt.Printf("\nSvelte Project created successfully.\n")
 
 	return nil
+}
+
+func initBasicSetup() {
+	// Clone store Folder
+	err := utils.CloneAndCopySubdir("https://github.com/mastergrimm/saiba-cli.git", "templates/default", ".")
+
+	if err != nil {
+		fmt.Printf("Failed to add initial scaffold: %v\n", err)
+	}
+}
+
+func addStore() {
+	err := utils.CloneAndCopySubdir("https://github.com/mastergrimm/saiba-cli.git", "templates/default/store", "src/lib")
+
+	if err != nil {
+		fmt.Printf("Failed to add initial scaffold: %v\n", err)
+	}
 }
 
 func addSASS() {
