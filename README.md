@@ -11,18 +11,17 @@
 > [!WARNING]
 > This project is in the early stages of development and is not ready for production use. Many features are currently missing or may not work as expected. Please use with caution and at your own risk.
 
-
 Saiba CLI is a command-line interface tool designed to streamline the creation and management of Saiba Web Projects, particularly focused on SvelteKit applications.
 
 <img src="image/gif/demo.gif" alt="demo" width="620"/>
 
 ## Features
 
-- **Create SvelteKit Projects**: Quickly scaffold a new SvelteKit project with the latest features and best practices.
-- **SASS Integration**: Easily add SASS to your projects for more powerful and flexible styling.
-- **Lucia Authentication**: Implement Lucia for robust authentication solutions right out of the box.
-- **Iconify Icons**: Access a rich library of icons with Iconify integration, enhancing the visual appeal and user interface of your projects.
-- **SaibaUI Components**: Utilize SaibaUI to speed up your UI development with pre-built, customizable components tailored for SvelteKit.
+-   **Create SvelteKit Projects**: Quickly scaffold a new SvelteKit project with the latest features and best practices.
+-   **SASS Integration**: Easily add SASS to your projects for more powerful and flexible styling.
+-   **Lucia Authentication**: Implement Lucia for robust authentication solutions right out of the box.
+-   **Iconify Icons**: Access a rich library of icons with Iconify integration, enhancing the visual appeal and user interface of your projects.
+-   **SaibaUI Components**: Utilize SaibaUI to speed up your UI development with pre-built, customizable components tailored for SvelteKit.
 
 ## Getting Started
 
@@ -30,9 +29,10 @@ Saiba CLI is a command-line interface tool designed to streamline the creation a
 
 Before you begin, ensure you have the following installed on your system:
 
--   Git
--   Node.js
--   Go
+-   [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+-   [Node.js](https://nodejs.org/en/download) (at least v16.14)
+-   [PNPM](https://pnpm.io/installation)
+-   [Go](https://go.dev/doc/install)
 
 ### Installation
 
@@ -76,8 +76,6 @@ saiba create
 ```
 
 Then follow the following prompts. "Space" to select options. "Enter" to go the the next field.
-
-
 
 ## Contributing
 

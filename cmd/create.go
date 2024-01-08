@@ -39,7 +39,6 @@ var createCmd = &cobra.Command{
 				_ = spinner.New().Title("Adding Sass folders").Action(addSASS).Run()
 			case "Lucia Auth":
 				_ = spinner.New().Title("Adding Lucia Auth").Action(addLuciaAuth).Run()
-
 			case "Iconify Icons":
 				_ = spinner.New().Title("Adding Iconify Icons").Action(addIconifyIcons).Run()
 			}
@@ -52,7 +51,8 @@ var createCmd = &cobra.Command{
 }
 
 func createSvelteKit(projectName string) error {
-	cmd := exec.Command("npm", "create", "svelte@latest", projectName)
+
+	cmd := exec.Command("pnpm", "create", "svelte@latest", projectName)
 
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
@@ -62,14 +62,11 @@ func createSvelteKit(projectName string) error {
 		return fmt.Errorf("command finished with error: %v", err)
 	}
 
-	fmt.Print("\n")
-
-	fmt.Println("Svelte Project created successfully.")
-
-	fmt.Print("\n")
+	fmt.Printf("\nSvelte Project created successfully.\n")
 
 	return nil
 }
+
 func addSASS() {
 	utils.GotoDir(tui.GetProjectName())
 
@@ -100,13 +97,12 @@ func addLuciaAuth() {
 	if err != nil {
 		fmt.Printf("Failed to add Lucia Auth: %v\n", err)
 	}
-
 }
 
 func addIconifyIcons() {
 	utils.GotoDir(tui.GetProjectName())
 
-	cmd := exec.Command("npm", "install", "--silent", "--no-progress", "--save-dev", "@iconify/svelte")
+	cmd := exec.Command("pnpm", "install", "--silent", "--save-dev", "@iconify/svelte")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
