@@ -51,12 +51,16 @@ var createCmd = &cobra.Command{
 		if tui.GetStore() {
 			_ = spinner.New().Title("Adding Store").Action(addStore).Run()
 		}
+
+		if tui.GetUtils() != nil {
+			fmt.Printf("These are the Utils you have chosen: %v\n", tui.GetUtils())
+		}
 	},
 }
 
 func createSvelteKit(projectName string) error {
 
-	cmd := exec.Command("pnpm", "create", "svelte@latest", projectName)
+	cmd := exec.Command("pnpm", "create", "svelte@latest", projectName, "--silent")
 
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
@@ -71,21 +75,18 @@ func createSvelteKit(projectName string) error {
 	return nil
 }
 
-func initBasicSetup() {
-	// Clone store Folder
-	err := utils.CloneAndCopySubdir("https://github.com/mastergrimm/saiba-cli.git", "templates/default", ".")
+func addUtil(util string) {
 
-	if err != nil {
-		fmt.Printf("Failed to add initial scaffold: %v\n", err)
-	}
 }
 
 func addStore() {
-	err := utils.CloneAndCopySubdir("https://github.com/mastergrimm/saiba-cli.git", "templates/default/store", "src/lib")
+	err := utils.CloneAndCopySubdir("https://github.com/mastergrimm/saiba-cli.git", "templates/default/svelte-store", "src/lib")
 
 	if err != nil {
 		fmt.Printf("Failed to add initial scaffold: %v\n", err)
 	}
+
+	fmt.Printf("Store added successfully.\n")
 }
 
 func addSASS() {

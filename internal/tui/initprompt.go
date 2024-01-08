@@ -16,6 +16,7 @@ type model struct {
 	features       []string
 	includeSaibaUI bool
 	store          bool
+	utils          []string
 }
 
 var theme *huh.Theme = huh.ThemeBase16()
@@ -41,7 +42,6 @@ func NewModel() model {
 				Title("Enter Repo Name").
 				Value(&m.repoName).
 				Validate(func(str string) error {
-					// TODO: Add regex for github repo name
 
 					return nil
 				}),
@@ -72,6 +72,16 @@ func NewModel() model {
 				Affirmative("Yes").
 				Negative("No").
 				Value(&m.store),
+		),
+		huh.NewGroup(
+			huh.NewMultiSelect[string]().
+				Key("utils").
+				Title("Select all utils you'd like (Space Bar)").
+				Options(
+					huh.NewOption("clickOutside", "clickoutside"),
+					huh.NewOption("truncateText", "truncatetext"),
+				).
+				Value(&m.utils),
 		).WithTheme(theme),
 	)
 
@@ -148,4 +158,8 @@ func GetIncludeSaibaUI() bool {
 
 func GetStore() bool {
 	return FormValues.form.GetBool("store")
+}
+
+func GetUtils() []string {
+	return FormValues.form.Get("utils").([]string)
 }
